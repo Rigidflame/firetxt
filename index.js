@@ -11,8 +11,8 @@ if (!argv.path) {
   argv.path = '/';
 }
 if (!argv.file) {
-  console.log('Assuming file fire.txt'.blue);
   argv.file = 'fire.json';
+  console.log(('Assuming file ' + argv.file).blue);
 }
 
 if (argv.path[0] !== '/') argv.path = '/' + argv.path;
@@ -22,7 +22,7 @@ console.log('Path:', argv.path.green);
 
 var rootRef = new Firebase(argv.firebase + '.firebaseio.com'),
     ref = rootRef.child(argv.path),
-    last;
+    last, readyToClose;
 
 fs.writeFile(argv.file, "", function (err) {
   ref.on('value', function (snap) {
@@ -54,4 +54,16 @@ fs.writeFile(argv.file, "", function (err) {
       console.log('Updating Firebase', new Date());
     });
   });
+
+  process.on('exit', exitHandler.bind(null,{cleanup:true}));
+  process.on('SIGINT', exitHandler.bind(null, {exit:true}));
 });
+
+function exitHandler(options, err) {
+  if (!readyToClose)
+    fs.unlinkSync(argv.file);
+
+  readyToClose = true;
+  if (options.cleanup) console.log('Cleaning up...'.blue);
+  if (options.exit) process.exit();
+}
