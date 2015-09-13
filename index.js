@@ -12,7 +12,7 @@ if (!argv.path) {
 }
 if (!argv.file) {
   console.log('Assuming file fire.txt'.blue);
-  argv.file = 'fire.txt';
+  argv.file = 'fire.json';
 }
 
 if (argv.path[0] !== '/') argv.path = '/' + argv.path;
@@ -27,7 +27,7 @@ var rootRef = new Firebase(argv.firebase + '.firebaseio.com'),
 fs.writeFile(argv.file, "", function (err) {
   ref.on('value', function (snap) {
     last = snap.val();
-    fs.writeFile('fire.txt', JSON.stringify(snap.val(), null, 2), function (err) {
+    fs.writeFile(argv.file, JSON.stringify(snap.val(), null, 2), function (err) {
       if (err) throw err;
     });
   });
