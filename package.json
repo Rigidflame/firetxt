@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-     "firetxt": "./index.js"
-   },
+    "firetxt": "./index.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
